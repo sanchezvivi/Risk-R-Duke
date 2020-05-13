@@ -1,15 +1,17 @@
 ---
-title: "Risk Management with R - Module 1"
-output: html_notebook
-editor_options: 
-  chunk_output_type: console
+title: "Risk Management with R - Module 1 - Data and Returns"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
 ---
 
 The code from the course was adapted using the [**tidyquant**](https://business-science.github.io/tidyquant/index.html) package as a way to better understand its workflow and functions. 
 
 ## Libraries
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(quantmod)
 library(tidyquant)
@@ -37,8 +39,6 @@ wilsh %>%
   geom_line() +
   labs(title = "WILL 5000 Indext") + 
   theme_tq()
-
-#total return TR
 
 ```
 
@@ -118,5 +118,64 @@ y_returns %>%
   geom_line() +
   labs(title = "WILL 5000 Indext", y = "Yearly Returns") + 
   theme_tq()
+
+```
+
+
+## 4. Application 1
+
+```{r}
+
+
+yen <- tq_get("DEXJPUS", get = "economic.data", from = "1979-12-31", to  = "2017-12-31")
+
+yen <- yen %>% 
+  na.omit()
+
+yen$price <- 1/yen$price
+
+yen %>% 
+  ggplot(aes(x = date, y = price)) +
+  geom_line() +
+  theme_tq()
+
+d_returns <- yen %>%
+    group_by(symbol) %>%
+    tq_transmute(select = price, 
+                 mutate_fun = periodReturn, 
+                 period     = "daily", 
+                 col_rename = "d_return")
+
+m_returns <- yen %>%
+    group_by(symbol) %>%
+    tq_transmute(select = price, 
+                 mutate_fun = periodReturn, 
+                 period     = "monthly", 
+                 col_rename = "m_return")
+
+exp(m_returns$m_return[2]) - 1
+
+
+q_returns <- yen %>%
+    group_by(symbol) %>%
+    tq_transmute(select = price, 
+                 mutate_fun = periodReturn, 
+                 period     = "quarterly", 
+                 col_rename = "q_return")
+
+tail(q_returns,3)
+
+
+y_returns <- yen %>%
+    group_by(symbol) %>%
+    tq_transmute(select = price, 
+                 mutate_fun = periodReturn, 
+                 period     = "yearly", 
+                 col_rename = "y_return")
+
+
+tail(y_returns,3)
+
+exp(y_returns$y_return[39]) - 1
 
 ```
