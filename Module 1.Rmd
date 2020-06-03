@@ -1,10 +1,8 @@
 ---
 title: "Risk Management with R - Module 1 - Data and Returns"
-output:
-  html_document:
-    df_print: paged
+output: github_document
 editor_options:
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 The code from the course was adapted using the [**tidyquant**](https://business-science.github.io/tidyquant/index.html) package as a way to better understand its workflow and functions. 

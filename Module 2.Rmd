@@ -1,8 +1,6 @@
 ---
 title: "Risk Management with R - Module 2 - Normal Distributions"
-output:
-  html_document:
-    df_print: paged
+output: github_document
 editor_options:
   chunk_output_type: console
 ---
